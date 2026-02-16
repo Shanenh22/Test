@@ -82,8 +82,10 @@ function initNavigation() {
     // Hide sticky CTA when nav is open
     if (stickyCta) stickyCta.classList.add('hidden');
     
-    // Focus management: move focus to close button when opened
+    // Focus management: move focus into the drawer when opened
+    const firstLink = mobileNav.querySelector('a, button');
     if (closeBtn) closeBtn.focus();
+    else if (firstLink) firstLink.focus();
   }
 
   function closeNav() {
