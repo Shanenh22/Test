@@ -442,10 +442,23 @@ p { margin-bottom: var(--space-md); }
 }
 .mobile-nav a:hover { color: var(--color-accent); }
 .mobile-nav .mobile-dropdown-toggle {
+  /* Make mobile dropdown buttons look/behave like mobile nav links */
+  width: 100%;
+  background: transparent;
+  border: 0;
+  padding: 14px 0;
+  text-align: left;
+  color: rgba(255,255,255,0.85);
+  font-size: var(--fs-md);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+}
+/* Hover state for dropdown toggles to match links */
+.mobile-nav .mobile-dropdown-toggle:hover {
+  color: var(--color-accent);
 }
 .mobile-nav .mobile-dropdown-toggle .arrow {
   transition: transform var(--transition-fast);
