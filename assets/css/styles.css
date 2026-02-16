@@ -1367,14 +1367,3 @@ p { margin-bottom: var(--space-md); }
   .hero-container::before, .hero-container::after { display: none; }
   .hero-content h1 { color: #000; text-shadow: none; }
 }
-
-
-/* Improve hero primary CTA contrast on image/overlay backgrounds */
-.hero-container .btn--primary {
-  border: 2px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
-}
-.hero-container .btn--primary:hover,
-.hero-container .btn--primary:focus {
-  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.32);
-}
