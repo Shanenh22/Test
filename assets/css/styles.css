@@ -1123,6 +1123,42 @@ p { margin-bottom: var(--space-md); }
 }
 
 /* ============================================================
+   MOBILE STICKY CTA
+   ------------------------------------------------------------
+   A fixed bar that appears at the bottom of the screen on
+   small devices.  Contains call and booking buttons.  Hidden
+   on viewports wider than 768px.
+*/
+.mobile-sticky-cta {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--gradient-cta);
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  z-index: 2000;
+}
+.mobile-sticky-cta a {
+  flex: 1;
+  text-align: center;
+  padding: var(--space-md);
+  color: var(--color-white);
+  text-decoration: none;
+  font-size: var(--fs-base);
+  font-weight: 600;
+}
+.mobile-sticky-cta a + a {
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+}
+@media (min-width: 768px) {
+  .mobile-sticky-cta {
+    display: none;
+  }
+}
+
+/* ============================================================
    PRINT
    ============================================================ */
 @media print {
