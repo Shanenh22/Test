@@ -66,24 +66,56 @@ function initNavigation() {
   const hamburger = document.getElementById('hamburger');
   const mobileNav = document.getElementById('mobileNav');
   const overlay = document.getElementById('mobileNavOverlay');
+  const closeBtn = document.getElementById('mobileNavClose');
+  const stickyCta = document.querySelector('.mobile-sticky-cta');
   if (!hamburger || !mobileNav) return;
+
+  function openNav() {
+    hamburger.classList.add('active');
+    mobileNav.classList.add('open');
+    overlay.classList.add('open');
+    hamburger.setAttribute('aria-expanded', 'true');
+    mobileNav.setAttribute('aria-hidden', 'false');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    
+    // Hide sticky CTA when nav is open
+    if (stickyCta) stickyCta.classList.add('hidden');
+    
+    // Focus management: move focus to close button when opened
+    if (closeBtn) closeBtn.focus();
+  }
+
+  function closeNav() {
+    hamburger.classList.remove('active');
+    mobileNav.classList.remove('open');
+    overlay.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    mobileNav.setAttribute('aria-hidden', 'true');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    
+    // Show sticky CTA when nav is closed
+    if (stickyCta) stickyCta.classList.remove('hidden');
+  }
 
   hamburger.addEventListener('click', () => {
     const isOpen = mobileNav.classList.contains('open');
-    hamburger.classList.toggle('active');
-    mobileNav.classList.toggle('open');
-    overlay.classList.toggle('open');
-    hamburger.setAttribute('aria-expanded', !isOpen);
-    mobileNav.setAttribute('aria-hidden', isOpen);
-    overlay.setAttribute('aria-hidden', isOpen);
-    document.body.style.overflow = isOpen ? '' : 'hidden';
-    
-    // Focus management: move focus to nav when opened
-    if (!isOpen) {
-      const firstLink = mobileNav.querySelector('a');
-      if (firstLink) firstLink.focus();
+    if (isOpen) {
+      closeNav();
+      hamburger.focus();
+    } else {
+      openNav();
     }
   });
+
+  // Close button inside mobile nav
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      closeNav();
+      hamburger.focus();
+    });
+  }
 
   overlay.addEventListener('click', closeNav);
   
@@ -95,17 +127,7 @@ function initNavigation() {
     }
   });
 
-  function closeNav() {
-    hamburger.classList.remove('active');
-    mobileNav.classList.remove('open');
-    overlay.classList.remove('open');
-    hamburger.setAttribute('aria-expanded', 'false');
-    mobileNav.setAttribute('aria-hidden', 'true');
-    overlay.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-  }
-
-  // Fix #20: Mobile dropdown toggles with ARIA
+  // Mobile dropdown toggles with ARIA
   document.querySelectorAll('.mobile-dropdown-toggle').forEach(toggle => {
     toggle.addEventListener('click', () => {
       const targetId = toggle.getAttribute('data-target');

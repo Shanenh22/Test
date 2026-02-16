@@ -162,8 +162,31 @@ ul, ol { list-style: none; }
 .content-narrow { max-width: 800px; margin: 0 auto; }
 .content-h3 { margin-top: var(--space-2xl); font-size: var(--fs-lg); }
 
-/* Doctor Photo */
-.doctor-photo { border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); width: 100%; height: auto; display: block; object-fit: cover; }
+/* Doctor Photo - Responsive with optimized display */
+.doctor-photo { 
+  border-radius: var(--radius-lg); 
+  box-shadow: var(--shadow-lg); 
+  width: 100%; 
+  max-width: 500px;
+  height: auto; 
+  display: block; 
+  object-fit: cover;
+  margin: 0 auto;
+}
+
+/* Optimize doctor photo display on different screens */
+@media (max-width: 768px) {
+  .doctor-photo {
+    max-width: 350px;
+  }
+}
+
+@media (max-width: 480px) {
+  .doctor-photo {
+    max-width: 280px;
+    border-radius: var(--radius-md);
+  }
+}
 .photo-caption { text-align: center; margin-top: var(--space-md); color: var(--color-text-light); font-style: italic; font-size: var(--fs-sm); }
 
 /* Emergency phone */
@@ -241,10 +264,13 @@ p { margin-bottom: var(--space-md); }
   border: 2px solid transparent;
   border-radius: var(--radius-md);
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: all var(--transition-base), transform 0.2s ease, box-shadow 0.2s ease;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   white-space: nowrap;
+}
+.btn:active {
+  transform: scale(0.98);
 }
 .btn--primary {
   background: var(--gradient-cta);
@@ -253,8 +279,8 @@ p { margin-bottom: var(--space-md); }
 }
 .btn--primary:hover,
 .btn--primary:focus {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 91, 150, 0.35);
   color: var(--color-white);
 }
 .btn--primary:focus-visible {
@@ -270,6 +296,8 @@ p { margin-bottom: var(--space-md); }
 .btn--secondary:focus {
   background: var(--color-white);
   color: var(--color-primary);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.25);
 }
 .btn--secondary:focus-visible {
   outline: 3px solid var(--color-white);
@@ -284,6 +312,8 @@ p { margin-bottom: var(--space-md); }
 .btn--outline:focus {
   background: var(--color-secondary);
   color: var(--color-white);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 91, 150, 0.25);
 }
 .btn--outline:focus-visible {
   outline: 3px solid var(--color-secondary);
@@ -430,19 +460,28 @@ p { margin-bottom: var(--space-md); }
   font-size: var(--fs-sm);
 }
 
-/* Hamburger */
+/* Hamburger - Enhanced touch target (44x44px minimum) */
 .hamburger {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 5px;
   cursor: pointer;
   z-index: 1001;
-  padding: 8px;
+  padding: 10px;
+  min-width: 44px;
+  min-height: 44px;
   background: none;
   border: none;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+.hamburger:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 .hamburger span {
-  width: 26px;
+  width: 24px;
   height: 2px;
   background: var(--color-white);
   border-radius: 2px;
@@ -452,7 +491,7 @@ p { margin-bottom: var(--space-md); }
 .hamburger.active span:nth-child(2) { opacity: 0; }
 .hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/* Mobile Nav Overlay */
+/* Mobile Nav Overlay - Enhanced with bottom padding for sticky CTA */
 .mobile-nav {
   position: fixed;
   top: 0;
@@ -460,13 +499,41 @@ p { margin-bottom: var(--space-md); }
   width: 100%;
   max-width: 380px;
   height: 100vh;
+  height: 100dvh; /* Dynamic viewport height for mobile browsers */
   background: var(--color-primary);
   z-index: 999;
   transition: right var(--transition-base);
-  padding: calc(var(--header-height) + var(--space-xl)) var(--space-xl) var(--space-xl);
+  padding: calc(var(--header-height) + var(--space-xl)) var(--space-xl) 80px;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .mobile-nav.open { right: 0; }
+
+/* Mobile Nav Close Button */
+.mobile-nav-close {
+  position: absolute;
+  top: var(--space-lg);
+  right: var(--space-lg);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  color: var(--color-white);
+  font-size: var(--fs-xl);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  z-index: 1002;
+}
+.mobile-nav-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+/* Mobile Nav Links - Larger touch targets and staggered animation */
 .mobile-nav-overlay {
   position: fixed;
   top: 0;
@@ -483,33 +550,64 @@ p { margin-bottom: var(--space-md); }
   opacity: 1;
   pointer-events: all;
 }
+.mobile-nav > a,
+.mobile-nav > div {
+  opacity: 0;
+  transform: translateX(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.mobile-nav.open > a,
+.mobile-nav.open > div {
+  opacity: 1;
+  transform: translateX(0);
+}
+.mobile-nav.open > *:nth-child(1) { transition-delay: 0.05s; }
+.mobile-nav.open > *:nth-child(2) { transition-delay: 0.1s; }
+.mobile-nav.open > *:nth-child(3) { transition-delay: 0.15s; }
+.mobile-nav.open > *:nth-child(4) { transition-delay: 0.2s; }
+.mobile-nav.open > *:nth-child(5) { transition-delay: 0.25s; }
+.mobile-nav.open > *:nth-child(6) { transition-delay: 0.3s; }
+.mobile-nav.open > *:nth-child(7) { transition-delay: 0.35s; }
+.mobile-nav.open > *:nth-child(8) { transition-delay: 0.4s; }
+
 .mobile-nav a {
   display: block;
   color: rgba(255,255,255,0.85);
   font-size: var(--fs-md);
-  padding: 14px 0;
+  padding: 16px 0;
   border-bottom: 1px solid rgba(255,255,255,0.08);
-  transition: color var(--transition-fast);
+  transition: color var(--transition-fast), padding-left var(--transition-fast);
 }
-.mobile-nav a:hover { color: var(--color-accent); }
+.mobile-nav a:hover { 
+  color: var(--color-accent);
+  padding-left: 8px;
+}
 .mobile-nav .mobile-dropdown-toggle {
-  /* Make mobile dropdown buttons look/behave like mobile nav links */
   width: 100%;
   background: transparent;
   border: 0;
-  padding: 14px 0;
+  padding: 16px 0;
   text-align: left;
   color: rgba(255,255,255,0.85);
   font-size: var(--fs-md);
+  font-family: var(--font-body);
   border-bottom: 1px solid rgba(255,255,255,0.08);
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  transition: all var(--transition-fast);
 }
-/* Hover state for dropdown toggles to match links */
 .mobile-nav .mobile-dropdown-toggle:hover {
   color: var(--color-accent);
+}
+.mobile-nav .mobile-dropdown-toggle.open {
+  color: var(--color-accent);
+  background: rgba(179, 199, 247, 0.1);
+  margin: 0 calc(-1 * var(--space-xl));
+  padding-left: var(--space-xl);
+  padding-right: var(--space-xl);
+  border-radius: var(--radius-sm);
 }
 .mobile-nav .mobile-dropdown-toggle .arrow {
   transition: transform var(--transition-fast);
@@ -521,11 +619,14 @@ p { margin-bottom: var(--space-md); }
 .mobile-nav .mobile-sub-menu {
   display: none;
   padding-left: var(--space-lg);
+  background: rgba(0, 0, 0, 0.15);
+  margin: 0 calc(-1 * var(--space-xl));
+  padding: var(--space-sm) var(--space-xl) var(--space-sm) calc(var(--space-xl) + var(--space-lg));
 }
 .mobile-nav .mobile-sub-menu.open { display: block; }
 .mobile-nav .mobile-sub-menu a {
   font-size: var(--fs-base);
-  padding: 10px 0;
+  padding: 12px 0;
 }
 .mobile-nav-phones {
   margin-top: var(--space-xl);
@@ -536,6 +637,7 @@ p { margin-bottom: var(--space-md); }
   border-bottom: none;
   font-weight: 700;
   color: var(--color-accent);
+  padding: 12px 0;
 }
 
 /* ============================================================
@@ -554,6 +656,16 @@ p { margin-bottom: var(--space-md); }
   background-repeat: no-repeat;
   overflow: hidden;
 }
+
+/* Responsive hero background - serve smaller images on mobile */
+@media (max-width: 600px) {
+  .hero-container {
+    background-size: cover;
+    /* On mobile, the gradient overlay provides most visual impact */
+    /* Actual image optimization would require server-side or CDN support */
+  }
+}
+
 .hero-container::before {
   content: '';
   position: absolute;
@@ -945,6 +1057,32 @@ p { margin-bottom: var(--space-md); }
   color: var(--color-text-light);
 }
 
+/* Responsive hours table - stacked layout on small screens */
+@media (max-width: 480px) {
+  .hours-table,
+  .hours-table tbody,
+  .hours-table tr,
+  .hours-table td {
+    display: block;
+    width: 100%;
+  }
+  .hours-table tr {
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .hours-table td {
+    border-bottom: none;
+    padding: 2px 0;
+  }
+  .hours-table td:first-child {
+    font-size: var(--fs-sm);
+  }
+  .hours-table td:last-child {
+    text-align: left;
+    font-size: var(--fs-sm);
+  }
+}
+
 /* --- Specials/Promo Cards --- */
 .promo-card {
   background: var(--gradient-cta);
@@ -1190,6 +1328,12 @@ p { margin-bottom: var(--space-md); }
   justify-content: space-evenly;
   align-items: center;
   z-index: 2000;
+  transition: transform var(--transition-base), opacity var(--transition-base);
+}
+.mobile-sticky-cta.hidden {
+  transform: translateY(100%);
+  opacity: 0;
+  pointer-events: none;
 }
 .mobile-sticky-cta a {
   flex: 1;
@@ -1199,6 +1343,10 @@ p { margin-bottom: var(--space-md); }
   text-decoration: none;
   font-size: var(--fs-base);
   font-weight: 600;
+  transition: background var(--transition-fast);
+}
+.mobile-sticky-cta a:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 .mobile-sticky-cta a + a {
   border-left: 1px solid rgba(255, 255, 255, 0.3);
