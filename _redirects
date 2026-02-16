@@ -1,1 +1,8 @@
 /*    /pages/404.html   404
+
+# Redirect removed blog posts to appropriate educational or service pages (301 permanent)
+/blog/oral-hygiene-basics.html   /pages/services/general-dentistry.html   301
+/blog/dental-insurance-guide.html   /pages/patient-info.html   301
+/blog/kids-dental-health.html   /pages/services/pediatric-dentistry.html   301
+/blog/gum-disease-prevention.html   /pages/services/periodontics.html   301
+/blog/cosmetic-options.html   /pages/services/cosmetic-dentistry.html   301
