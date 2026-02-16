@@ -15,7 +15,9 @@
 <meta property="og:description" content="Contact Oasis Dental. Keller: (817) 741-3331. Fort Worth: (817) 921-9616.">
 <meta property="og:url" content="https://txoasisdental.com/contact">
 <meta property="og:type" content="website">
-<meta property="og:image" content="../assets/images/og-oasis-dental.png">
+<meta property="og:image" content="https://txoasisdental.com/assets/images/og-oasis-dental.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://txoasisdental.com/assets/images/og-oasis-dental.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
@@ -95,7 +97,7 @@
 <h1>Contact Oasis Dental</h1>
 <p>Schedule your appointment or ask us a question.</p>
 <div class="hero-buttons">
-<a href="../pages/contact.html" class="btn btn--primary">Book Appointment</a>
+<a href="#" data-href="pages/contact.html" class="nav-link" class="btn btn--primary">Book Appointment</a>
 <a href="tel:+18177413331" class="btn btn--secondary">Call (817) 741-3331</a>
 </div>
 <div class="hero-breadcrumb"><a href="../index.html">Home</a><span>›</span><a href="#">Contact</a></div>
@@ -108,19 +110,26 @@
 <span class="section-label">Get in Touch</span>
 <h2>Contact Oasis Dental</h2>
 <p>Fill out the form or call either location to schedule.</p>
-<div class="location-card mb-xl"><h4>Keller Office</h4><address>1211 S Main St #100, Keller, TX 76248<br><a href="tel:+18177413331"><strong>(817) 741-3331</strong></a></address><p class="text-sm text-muted mt-sm">Mon &amp; Wed: 9–4 | Fri: 9–3 (By Appt.)</p></div>
+<div class="location-card mb-xl"><h3>Keller Office</h3><address>1211 S Main St #100, Keller, TX 76248<br><a href="tel:+18177413331"><strong>(817) 741-3331</strong></a></address><p class="text-sm text-muted mt-sm">Mon &amp; Wed: 9–4 | Fri: 9–3 (By Appt.)</p></div>
 <div class="location-card"><h4>Fort Worth Office</h4><address>1401 W Berry St, Fort Worth, TX 76110<br><a href="tel:+18179219616"><strong>(817) 921-9616</strong></a></address><p class="text-sm text-muted mt-sm">Tue &amp; Thu: 9–4 | Fri: 9–3 (By Appt.)</p></div>
 </div>
 <div class="animate-in">
 <div id="formMessage" class="form-message" role="alert" aria-live="polite"></div>
-<form id="contactForm" action="mailto:shaneh22@gmail.com" method="POST" enctype="text/plain" data-captcha-answer="" novalidate aria-describedby="formMessage">
+<form id="contactForm" novalidate aria-describedby="formMessage" autocomplete="on">
+<!-- Honeypot + start time for anti-spam -->
+<div class="ohnohoney" aria-hidden="true">
+  <label for="company">Company</label>
+  <input type="text" id="company" name="company" tabindex="-1" autocomplete="organization">
+  <input type="hidden" id="startTime" name="startTime">
+</div>
+
 <div class="form-group"><label for="cf-name">Full Name <span aria-hidden="true">*</span><span class="visually-hidden">(required)</span></label><input type="text" id="cf-name" name="name" required placeholder="Your full name" autocomplete="name" aria-required="true"></div>
 <div class="form-group"><label for="cf-email">Email Address <span aria-hidden="true">*</span><span class="visually-hidden">(required)</span></label><input type="email" id="cf-email" name="email" required placeholder="you@example.com" autocomplete="email" aria-required="true"></div>
 <div class="form-group"><label for="cf-phone">Phone Number</label><input type="tel" id="cf-phone" name="phone" placeholder="(817) 555-1234" autocomplete="tel"></div>
 <div class="form-group"><label for="cf-location">Preferred Location</label><select id="cf-location" name="location" aria-label="Select your preferred office location"><option value="">Select a location</option><option value="keller">Keller — 1211 S Main St</option><option value="fort-worth">Fort Worth — 1401 W Berry St</option></select></div>
 <div class="form-group"><label for="cf-message">Message <span aria-hidden="true">*</span><span class="visually-hidden">(required)</span></label><textarea id="cf-message" name="message" required placeholder="How can we help you?" aria-required="true"></textarea></div>
 <div class="ohnohoney" aria-hidden="true"><label for="b_name">Leave blank</label><input type="text" id="b_name" name="b_name" tabindex="-1" autocomplete="off"></div>
-<div class="form-group"><label class="captcha-label" for="cf-captcha" id="captcha-question">To prove you are human, what is 3 + 4?</label><input type="text" id="cf-captcha" name="captcha_answer" required placeholder="Your answer" autocomplete="off" aria-labelledby="captcha-question" aria-required="true"></div>
+<div class="form-group"><label class="captcha-label" for="cf-captcha" id="captcha-question">To prove you are human, what is <span id="captcha-math">…</span>?</label><input type="text" id="cf-captcha" name="captcha_answer" required placeholder="Your answer" autocomplete="off" aria-labelledby="captcha-question" aria-required="true"></div>
 <button type="submit" class="btn btn--primary" style="width:100%;">Send Message</button>
 </form>
 </div>
@@ -134,6 +143,126 @@
 </div>
 </section>
 <footer class="site-footer" id="site-footer"></footer>
+<script>
+(function() {
+  const form = document.getElementById('contactForm');
+  const msgBox = document.getElementById('formMessage');
+  if (!form || !msgBox) return;
+
+  const toAddress = 'shaneh22@gmail.com';
+
+  const hpCompany = document.getElementById('company');
+  const hpLegacy = document.getElementById('b_name');
+  const startTime = document.getElementById('startTime');
+  if (startTime) startTime.value = Date.now().toString();
+
+  const mathSpan = document.getElementById('captcha-math');
+  const captchaInput = document.getElementById('cf-captcha');
+  const a = Math.floor(3 + Math.random() * 7);
+  const b = Math.floor(2 + Math.random() * 8);
+  const ans = a + b;
+  if (mathSpan) mathSpan.textContent = `${a} + ${b}`;
+  if (captchaInput) captchaInput.setAttribute('inputmode', 'numeric');
+
+  function setMessage(text, type) {
+    msgBox.textContent = text || '';
+    msgBox.classList.remove('is-error', 'is-success');
+    if (type) msgBox.classList.add(type === 'error' ? 'is-error' : 'is-success');
+  }
+
+  function tooManySubmissions() {
+    try {
+      const key = 'oasis_contact_submissions';
+      const now = Date.now();
+      const hour = 60 * 60 * 1000;
+      let arr = JSON.parse(localStorage.getItem(key) || '[]').filter(t => now - t < hour);
+      if (arr.length >= 3) return true;
+      arr.push(now);
+      localStorage.setItem(key, JSON.stringify(arr));
+      return false;
+    } catch (e) { return false; }
+  }
+
+  function validEmail(v) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test((v || '').trim());
+  }
+  function validPhone(v) {
+    const digits = (v || '').replace(/\D+/g, '');
+    return digits.length === 0 || (digits.length >= 10 && digits.length <= 15);
+  }
+
+  function markInvalid(el, isInvalid) {
+    if (!el) return;
+    if (isInvalid) el.setAttribute('aria-invalid', 'true');
+    else el.removeAttribute('aria-invalid');
+  }
+
+  form.addEventListener('input', () => setMessage('', null), { passive: true });
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    setMessage('', null);
+
+    if ((hpCompany && hpCompany.value) || (hpLegacy && hpLegacy.value)) {
+      setMessage('Something went wrong. Please try again.', 'error');
+      return;
+    }
+
+    const elapsed = Date.now() - Number((startTime && startTime.value) || 0);
+    if (elapsed < 5000) {
+      setMessage('Please take a moment to complete the form.', 'error');
+      return;
+    }
+
+    if (tooManySubmissions()) {
+      setMessage('Please try again later.', 'error');
+      return;
+    }
+
+    const nameEl = document.getElementById('cf-name');
+    const emailEl = document.getElementById('cf-email');
+    const phoneEl = document.getElementById('cf-phone');
+    const locEl = document.getElementById('cf-location');
+    const messageEl = document.getElementById('cf-message');
+
+    let ok = true;
+
+    const nameVal = (nameEl && nameEl.value || '').trim();
+    const emailVal = (emailEl && emailEl.value || '').trim();
+    const phoneVal = (phoneEl && phoneEl.value || '').trim();
+    const locVal = (locEl && locEl.value || '').trim();
+    const msgVal  = (messageEl && messageEl.value || '').trim();
+    const capVal  = (captchaInput && captchaInput.value || '').trim();
+
+    [nameEl, emailEl, phoneEl, messageEl, captchaInput].forEach(el => markInvalid(el, false));
+
+    if (!nameVal) { markInvalid(nameEl, true); ok = false; }
+    if (!validEmail(emailVal)) { markInvalid(emailEl, true); ok = false; }
+    if (!validPhone(phoneVal)) { markInvalid(phoneEl, true); ok = false; }
+    if (!msgVal) { markInvalid(messageEl, true); ok = false; }
+    if (String(ans) !== capVal) { markInvalid(captchaInput, true); ok = false; }
+
+    if (!ok) {
+      setMessage('Please correct the highlighted fields and try again.', 'error');
+      return;
+    }
+
+    const lines = [
+      `Name: ${nameVal}`,
+      `Email: ${emailVal}`,
+      `Phone: ${phoneVal || '—'}`,
+      `Preferred Location: ${locVal || '—'}`,
+      '',
+      msgVal
+    ];
+
+    const subject = encodeURIComponent('Website Contact – Oasis Dental');
+    const body = encodeURIComponent(lines.join('\n'));
+    window.location.href = `mailto:${toAddress}?subject=${subject}&body=${body}`;
+  });
+})();
+</script>
+
 <script src="../assets/js/main.js" defer></script>
 </body>
 </html>

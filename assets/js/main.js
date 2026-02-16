@@ -313,3 +313,39 @@ function initScrollAnimations() {
     els.forEach(el => el.classList.add('visible'));
   }
 }
+
+// === Oasis nav path resolver (ensures CTAs work from nested pages) ===
+(function () {
+  function resolveNavPath(href) {
+    if (!href) return href;
+    // absolute URLs or anchors
+    if (/^(https?:)?\/\//i.test(href) || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return href;
+    // root-relative stays as is
+    if (href.startsWith('/')) return href;
+    // Determine depth: if current path includes /pages/ or /blog/, back out accordingly
+    const path = window.location.pathname;
+    const inPages = path.includes('/pages/');
+    const inBlog = path.includes('/blog/');
+    const prefix = (inPages || inBlog) ? '../' : './';
+    return prefix + href.replace(/^\.\//, '');
+  }
+
+  document.addEventListener('click', function (e) {
+    const a = e.target.closest && e.target.closest('a.nav-link[data-href]');
+    if (!a) return;
+    const target = a.getAttribute('data-href');
+    if (!target) return;
+    e.preventDefault();
+    window.location.href = resolveNavPath(target);
+  }, { passive: false });
+
+  // Make non-native clickable tiles keyboard accessible if data-href present
+  document.addEventListener('keydown', function (e) {
+    const el = e.target.closest && e.target.closest('[role="button"][data-href]');
+    if (!el) return;
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      window.location.href = resolveNavPath(el.getAttribute('data-href'));
+    }
+  });
+})();
