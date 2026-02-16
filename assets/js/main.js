@@ -74,16 +74,34 @@ function initNavigation() {
     mobileNav.classList.toggle('open');
     overlay.classList.toggle('open');
     hamburger.setAttribute('aria-expanded', !isOpen);
+    mobileNav.setAttribute('aria-hidden', isOpen);
+    overlay.setAttribute('aria-hidden', isOpen);
     document.body.style.overflow = isOpen ? '' : 'hidden';
+    
+    // Focus management: move focus to nav when opened
+    if (!isOpen) {
+      const firstLink = mobileNav.querySelector('a');
+      if (firstLink) firstLink.focus();
+    }
   });
 
   overlay.addEventListener('click', closeNav);
+  
+  // Close nav on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mobileNav.classList.contains('open')) {
+      closeNav();
+      hamburger.focus();
+    }
+  });
 
   function closeNav() {
     hamburger.classList.remove('active');
     mobileNav.classList.remove('open');
     overlay.classList.remove('open');
     hamburger.setAttribute('aria-expanded', 'false');
+    mobileNav.setAttribute('aria-hidden', 'true');
+    overlay.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
   }
 
@@ -164,7 +182,7 @@ function initAccordion() {
   });
 }
 
-/* 6. CONTACT FORM — Fix #4: Works with <form> tag */
+/* 6. CONTACT FORM — Works with mailto: action */
 function initContactForm() {
   const form = document.getElementById('contactForm');
   if (!form) return;
@@ -173,38 +191,74 @@ function initContactForm() {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const msg = document.getElementById('formMessage');
+    
+    // Clear previous messages
+    if (msg) { msg.className = 'form-message'; msg.textContent = ''; }
 
-    // Honeypot
+    // Honeypot check
     const hp = form.querySelector('input[name="b_name"]');
     if (hp && hp.value.trim()) {
       if (msg) { msg.className = 'form-message success'; msg.textContent = 'Thank you!'; }
       return;
     }
 
-    // Captcha
+    // Captcha validation
     const ca = form.querySelector('input[name="captcha_answer"]');
     const expected = form.getAttribute('data-captcha-answer');
     if (ca && expected && ca.value.trim() !== expected) {
       if (msg) { msg.className = 'form-message error'; msg.textContent = 'Incorrect answer. Please try again.'; }
+      ca.focus();
       generateCaptcha();
       return;
     }
 
-    // Validation
+    // Form field validation
     const name = form.querySelector('input[name="name"]');
     const email = form.querySelector('input[name="email"]');
+    const phone = form.querySelector('input[name="phone"]');
+    const location = form.querySelector('select[name="location"]');
     const message = form.querySelector('textarea[name="message"]');
-    if (!name.value.trim() || !email.value.trim() || !message.value.trim()) {
-      if (msg) { msg.className = 'form-message error'; msg.textContent = 'Please fill in all required fields.'; }
+    
+    if (!name.value.trim()) {
+      if (msg) { msg.className = 'form-message error'; msg.textContent = 'Please enter your full name.'; }
+      name.focus();
+      return;
+    }
+    if (!email.value.trim()) {
+      if (msg) { msg.className = 'form-message error'; msg.textContent = 'Please enter your email address.'; }
+      email.focus();
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
       if (msg) { msg.className = 'form-message error'; msg.textContent = 'Please enter a valid email address.'; }
+      email.focus();
+      return;
+    }
+    if (!message.value.trim()) {
+      if (msg) { msg.className = 'form-message error'; msg.textContent = 'Please enter your message.'; }
+      message.focus();
       return;
     }
 
-    // Success
-    if (msg) { msg.className = 'form-message success'; msg.textContent = 'Thank you! We will get back to you within 24 hours.'; }
+    // Build mailto body
+    const subject = encodeURIComponent('New Appointment Request from ' + name.value.trim());
+    const body = encodeURIComponent(
+      'Name: ' + name.value.trim() + '\n' +
+      'Email: ' + email.value.trim() + '\n' +
+      'Phone: ' + (phone.value.trim() || 'Not provided') + '\n' +
+      'Preferred Location: ' + (location.value || 'Not selected') + '\n\n' +
+      'Message:\n' + message.value.trim()
+    );
+    
+    // Open mailto link
+    const mailtoLink = 'mailto:info@txoasisdental.com?subject=' + subject + '&body=' + body;
+    window.location.href = mailtoLink;
+    
+    // Show success message and reset
+    if (msg) { 
+      msg.className = 'form-message success'; 
+      msg.textContent = 'Your email client should open shortly. If it doesn\'t, please call us at (817) 741-3331.'; 
+    }
     form.reset();
     generateCaptcha();
   });

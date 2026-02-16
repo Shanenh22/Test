@@ -112,15 +112,15 @@
 <div class="location-card"><h4>Fort Worth Office</h4><address>1401 W Berry St, Fort Worth, TX 76110<br><a href="tel:+18179219616"><strong>(817) 921-9616</strong></a></address><p class="text-sm text-muted mt-sm">Tue &amp; Thu: 9–4 | Fri: 9–3 (By Appt.)</p></div>
 </div>
 <div class="animate-in">
-<div id="formMessage" class="form-message"></div>
-<form id="contactForm" action="mailto:info@txoasisdental.com" method="POST" enctype="text/plain" data-captcha-answer="" novalidate>
-<div class="form-group"><label for="cf-name">Full Name *</label><input type="text" id="cf-name" name="name" required placeholder="Your full name" autocomplete="name"></div>
-<div class="form-group"><label for="cf-email">Email Address *</label><input type="email" id="cf-email" name="email" required placeholder="you@example.com" autocomplete="email"></div>
+<div id="formMessage" class="form-message" role="alert" aria-live="polite"></div>
+<form id="contactForm" action="mailto:info@txoasisdental.com" method="POST" enctype="text/plain" data-captcha-answer="" novalidate aria-describedby="formMessage">
+<div class="form-group"><label for="cf-name">Full Name <span aria-hidden="true">*</span><span class="visually-hidden">(required)</span></label><input type="text" id="cf-name" name="name" required placeholder="Your full name" autocomplete="name" aria-required="true"></div>
+<div class="form-group"><label for="cf-email">Email Address <span aria-hidden="true">*</span><span class="visually-hidden">(required)</span></label><input type="email" id="cf-email" name="email" required placeholder="you@example.com" autocomplete="email" aria-required="true"></div>
 <div class="form-group"><label for="cf-phone">Phone Number</label><input type="tel" id="cf-phone" name="phone" placeholder="(817) 555-1234" autocomplete="tel"></div>
-<div class="form-group"><label for="cf-location">Preferred Location</label><select id="cf-location" name="location"><option value="">Select a location</option><option value="keller">Keller — 1211 S Main St</option><option value="fort-worth">Fort Worth — 1401 W Berry St</option></select></div>
-<div class="form-group"><label for="cf-message">Message *</label><textarea id="cf-message" name="message" required placeholder="How can we help you?"></textarea></div>
-<div class="ohnohoney"><label for="b_name">Leave blank</label><input type="text" id="b_name" name="b_name" tabindex="-1" autocomplete="off"></div>
-<div class="form-group"><label class="captcha-label" for="cf-captcha">To prove you are human, what is 3 + 4?</label><input type="text" id="cf-captcha" name="captcha_answer" required placeholder="Your answer" autocomplete="off"></div>
+<div class="form-group"><label for="cf-location">Preferred Location</label><select id="cf-location" name="location" aria-label="Select your preferred office location"><option value="">Select a location</option><option value="keller">Keller — 1211 S Main St</option><option value="fort-worth">Fort Worth — 1401 W Berry St</option></select></div>
+<div class="form-group"><label for="cf-message">Message <span aria-hidden="true">*</span><span class="visually-hidden">(required)</span></label><textarea id="cf-message" name="message" required placeholder="How can we help you?" aria-required="true"></textarea></div>
+<div class="ohnohoney" aria-hidden="true"><label for="b_name">Leave blank</label><input type="text" id="b_name" name="b_name" tabindex="-1" autocomplete="off"></div>
+<div class="form-group"><label class="captcha-label" for="cf-captcha" id="captcha-question">To prove you are human, what is 3 + 4?</label><input type="text" id="cf-captcha" name="captcha_answer" required placeholder="Your answer" autocomplete="off" aria-labelledby="captcha-question" aria-required="true"></div>
 <button type="submit" class="btn btn--primary" style="width:100%;">Send Message</button>
 </form>
 </div>
