@@ -314,20 +314,29 @@ function initScrollAnimations() {
   }
 }
 
-// === Oasis nav path resolver (ensures CTAs work from nested pages) ===
+// === Oasis nav path resolver (ensures CTAs work from any directory depth) ===
 (function () {
-  function resolveNavPath(href) {
-    if (!href) return href;
-    // absolute URLs or anchors
-    if (/^(https?:)?\/\//i.test(href) || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return href;
-    // root-relative stays as is
-    if (href.startsWith('/')) return href;
-    // Determine depth: if current path includes /pages/ or /blog/, back out accordingly
-    const path = window.location.pathname;
-    const inPages = path.includes('/pages/');
-    const inBlog = path.includes('/blog/');
-    const prefix = (inPages || inBlog) ? '../' : './';
-    return prefix + href.replace(/^\.\//, '');
+  function normalizeTarget(target) {
+    if (!target) return '';
+    return target.replace(/^\.\//, '').replace(/^\/+/, '');
+  }
+
+  function resolveToUrl(target) {
+    const t = normalizeTarget(target);
+    // Use absolute-from-root URL when served over http(s)
+    try {
+      if (window.location.origin && window.location.origin !== 'null') {
+        return new URL('/' + t, window.location.origin).toString();
+      }
+    } catch (e) {}
+
+    // Fallback for file:// or unusual origins:
+    // compute relative path back to site root by counting segments
+    const path = window.location.pathname || '';
+    const parts = path.split('/').filter(Boolean);
+    const depth = Math.max(0, parts.length - 1); // exclude filename
+    const prefix = '../'.repeat(depth);
+    return prefix + t;
   }
 
   document.addEventListener('click', function (e) {
@@ -336,16 +345,16 @@ function initScrollAnimations() {
     const target = a.getAttribute('data-href');
     if (!target) return;
     e.preventDefault();
-    window.location.href = resolveNavPath(target);
+    window.location.href = resolveToUrl(target);
   }, { passive: false });
 
-  // Make non-native clickable tiles keyboard accessible if data-href present
+  // Keyboard activation for non-native clickable elements with data-href
   document.addEventListener('keydown', function (e) {
     const el = e.target.closest && e.target.closest('[role="button"][data-href]');
     if (!el) return;
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      window.location.href = resolveNavPath(el.getAttribute('data-href'));
+      window.location.href = resolveToUrl(el.getAttribute('data-href'));
     }
   });
 })();
